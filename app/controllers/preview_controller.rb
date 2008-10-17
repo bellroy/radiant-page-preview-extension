@@ -3,10 +3,8 @@ class PreviewController < ApplicationController
   layout false
   def show
     page = page_class.new(params['page'])
-    page.slug ||= params[:slug]
-    page.breadcrumb ||= params[:breadcrumb]
-    page.parent ||= params[:parent_id]
-    params['part'].each do |i, attrs|
+    page.parent = parent
+    params.fetch('part', []).each do |i, attrs|
       page.parts << PagePart.new(attrs)
     end
     page.process(request,response)
@@ -20,6 +18,16 @@ class PreviewController < ApplicationController
       classname.constantize
     else
       Page
+    end
+  end
+  
+  def parent
+    if request.referer =~ %r{/admin/pages/(\d+)/child/new}
+      Page.find($1)
+    elsif request.referer =~ %r{/admin/pages/edit/(\d+)}
+      Page.find($1).parent
+    else
+      nil
     end
   end
 end
