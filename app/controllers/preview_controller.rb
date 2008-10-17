@@ -4,10 +4,11 @@ class PreviewController < ApplicationController
   def show
     Page.transaction do # what a horrible way to achieve readonly-ness :(
       construct_page.process(request,response)
+      @performed_render = true
       raise "Don't you dare save any changes"
     end
-  rescue
-    @performed_render = true
+  rescue => exception
+    render :text => exception.message unless @performed_render
   end
   
   private
@@ -28,9 +29,11 @@ class PreviewController < ApplicationController
       page = Page.find($1)
       page.parts = []
       page.attributes = params['page']
+    else
+      page = page_class.new(params['page'])
     end
     params.fetch('part', []).each do |i, attrs|
-      page.parts << PagePart.new(attrs)
+      page.parts.build(attrs)
     end
     return page
   end
