@@ -2,7 +2,11 @@ class PreviewController < ApplicationController
   skip_before_filter :verify_authenticity_token
   layout false
   def show
-    construct_page.process(request,response)
+    Page.transaction do # what a horrible way to achieve readonly-ness :(
+      construct_page.process(request,response)
+      raise "Don't you dare save any changes"
+    end
+  rescue
     @performed_render = true
   end
   
