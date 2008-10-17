@@ -1,1 +1,26 @@
-= submit_tag :preview, :value => 'Preview', :class => 'button'
+%script{:type => 'text/javascript'}
+  :plain
+    function content_document() {
+      var doc = $('page-preview').contentDocument;
+      if (doc == undefined || doc == null)
+        doc = $('page-preview').contentWindow.document;
+      return doc
+    }
+    function write_to_iframe(text) {
+      doc = content_document();
+      doc.open();
+      doc.write(text);
+      doc.close();
+    }
+    function preview() {
+      new Ajax.Request('/admin/preview', {
+        method: 'post',
+        parameters: Form.serialize(document.forms[0]),
+        onSuccess: function(response) { write_to_iframe(response.responseText); } 
+      })
+      write_to_iframe("Loading…");
+      $('page-preview').style.display = 'block';
+    }
+%div
+  %input{:type=>'button', :id => 'show-preview', :value => 'Preview', :class => 'button', :onclick => 'preview()'}
+= render :partial => 'preview/preview_iframe'

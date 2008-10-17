@@ -6,9 +6,9 @@ class PagePreviewExtension < Radiant::Extension
   description "Describe your extension here"
   url "http://yourwebsite.com/page_preview"
   
-  # define_routes do |map|
-  #   map.connect 'admin/page_preview/:action', :controller => 'admin/page_preview'
-  # end
+  define_routes do |map|
+    map.connect 'admin/preview', :controller => 'preview', :action => 'show'
+  end
   
   def activate
     # admin.tabs.add "Page Preview", "/admin/page_preview", :after => "Layouts", :visibility => [:all]
