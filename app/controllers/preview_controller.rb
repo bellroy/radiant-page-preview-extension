@@ -13,7 +13,7 @@ class PreviewController < ApplicationController
   
   private
   def page_class
-    classname = params['page']['class_name'].classify
+    classname = params[:page][:class_name].classify
     if Page.descendants.collect(&:name).include?(classname)
       classname.constantize
     else
@@ -23,16 +23,16 @@ class PreviewController < ApplicationController
   
   def construct_page
     if request.referer =~ %r{/admin/pages/(\d+)/child/new}
-      page = page_class.new(params['page'])
+      page = page_class.new(params[:page])
       page.parent = Page.find($1)
     elsif request.referer =~ %r{/admin/pages/edit/(\d+)}
       page = Page.find($1)
       page.parts = []
-      page.attributes = params['page']
+      page.attributes = params[:page]
     else
-      page = page_class.new(params['page'])
+      page = page_class.new(params[:page])
     end
-    params.fetch('part', []).each do |i, attrs|
+    params.fetch(:part, []).each do |i, attrs|
       page.parts.build(attrs)
     end
     return page
