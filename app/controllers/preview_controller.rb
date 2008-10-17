@@ -22,6 +22,7 @@ class PreviewController < ApplicationController
       page.parent = Page.find($1)
     elsif request.referer =~ %r{/admin/pages/edit/(\d+)}
       page = Page.find($1)
+      page.parts = []
       page.attributes = params['page']
     end
     params.fetch('part', []).each do |i, attrs|
