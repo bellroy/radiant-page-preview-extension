@@ -12,6 +12,7 @@ class PagePreviewExtension < Radiant::Extension
   
   def activate
     # admin.tabs.add "Page Preview", "/admin/page_preview", :after => "Layouts", :visibility => [:all]
+    admin.page.edit.add :main, "/preview/show", :after => "edit_buttons"
   end
   
   def deactivate
