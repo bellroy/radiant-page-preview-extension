@@ -2,8 +2,7 @@ class PreviewController < ApplicationController
   skip_before_filter :verify_authenticity_token
   layout false
   def show
-    page = page_class.new(params['page'])
-    page.parent = parent
+    page = get_page
     params.fetch('part', []).each do |i, attrs|
       page.parts << PagePart.new(attrs)
     end
@@ -21,13 +20,14 @@ class PreviewController < ApplicationController
     end
   end
   
-  def parent
+  def get_page
     if request.referer =~ %r{/admin/pages/(\d+)/child/new}
-      Page.find($1)
+      page = page_class.new(params['page'])
+      page.parent = Page.find($1)
     elsif request.referer =~ %r{/admin/pages/edit/(\d+)}
-      Page.find($1).parent
-    else
-      nil
+      page = Page.find($1)
+      page.attributes = params['page']
     end
+    return page
   end
 end
