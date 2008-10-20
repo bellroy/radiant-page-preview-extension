@@ -16,7 +16,7 @@ class PagePreviewExtension < Radiant::Extension
   end
   
   def deactivate
-    # admin.tabs.remove "Page Preview"
+    # doesn't work
   end
   
 end

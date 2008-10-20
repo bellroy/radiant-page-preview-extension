@@ -51,5 +51,10 @@ describe PreviewController do
       end
     end
   end
-  
+  it 'should not save any changes'
+  it 'should have the original pages children'
+  it 'should have the original pages parent'
+  it 'should not contain parts deleted'
+  it 'should contain parts created'
+  it 'should contain new parts contents'
 end
