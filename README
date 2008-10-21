@@ -1,3 +1,8 @@
 = Page Preview
 
 An extension to preview editing a page in it's enclosing layout to give the author an idea of what the output will be like.
+
+== Installation
+
+ git clone git://github.com/tricycle/radiant-page-preview-extension.git vendor/extensions/page_preview
+ rake radiant:extensions:page_preview:update
