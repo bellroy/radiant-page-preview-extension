@@ -1,11 +1,13 @@
+class ClassChangedException < Exception; end
+
 class PreviewController < ApplicationController
   layout false
   def show
-    Page.transaction do # what a horrible way to achieve readonly-ness :(
+    Page.transaction do # Extra safe don't save anything voodoo
       PagePart.transaction do
         construct_page.process(request,response)
         @performed_render = true
-        raise "Don't you dare save any changes"
+        raise "Don't you dare save any changes" 
       end
     end
   rescue => exception
@@ -27,7 +29,7 @@ class PreviewController < ApplicationController
       page = page_class.new(params[:page])
       page.parent = Page.find($1)
     elsif request.referer =~ %r{/admin/pages/edit/(\d+)}
-      page = Page.find($1)
+      page = Page.find($1).becomes(page_class)
       page.parts = []
       page.attributes = params[:page]
     else

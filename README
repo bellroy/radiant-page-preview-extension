@@ -6,3 +6,8 @@ An extension to preview editing a page in it's enclosing layout to give the auth
 
  git clone git://github.com/tricycle/radiant-page-preview-extension.git vendor/extensions/page_preview
  rake radiant:extensions:page_preview:update
+
+== Todo
+
+  1. Allow previewing of existing pages when changing page types
+
