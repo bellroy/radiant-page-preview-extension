@@ -5,6 +5,7 @@ function write_to_iframe(text) {
   var iframe = document.createElement('iframe');
   iframe.id = 'page-preview';
   iframe.setAttribute('frameborder','0');
+  iframe.setAttribute('src','/blank-iframe.html');
   iframe.style.width = "100%";
   iframe.style.height = "40em";
   iframe.style.display = "none";
