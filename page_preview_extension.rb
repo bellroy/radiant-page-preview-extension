@@ -3,8 +3,8 @@
 
 class PagePreviewExtension < Radiant::Extension
   version "1.0"
-  description "Describe your extension here"
-  url "http://yourwebsite.com/page_preview"
+  description "Enables previewing pages from the edit screen"
+  url "http://github.com/tricycle/raidant-page-preview-extension/"
   
   define_routes do |map|
     map.connect 'admin/preview', :controller => 'preview', :action => 'show'
@@ -18,5 +18,5 @@ class PagePreviewExtension < Radiant::Extension
   def deactivate
     # doesn't work
   end
-  
+
 end
