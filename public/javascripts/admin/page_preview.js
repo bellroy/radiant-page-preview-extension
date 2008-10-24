@@ -4,9 +4,12 @@ function preview(button) {
   oldaction = form.action;
 
   $('page-preview').show();
+  $('preview-notice').show();
 
-  form.setAttribute('target', 'page-preview');
-  form.setAttribute('action', '/admin/preview');
+  location.hash = 'show-preview';
+
+  form.target = 'page-preview';
+  form.action = '/admin/preview';
   
   form.submit();
 
