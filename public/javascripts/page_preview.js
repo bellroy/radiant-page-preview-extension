@@ -7,10 +7,11 @@ function preview(button) {
 
   form.setAttribute('target', 'page-preview');
   form.setAttribute('action', '/admin/preview');
+  
+  form.submit();
 
+  form.target = oldtarget;
+  form.action = oldaction;
 
-  window.setTimeout(function() {
-    form.target = oldtarget;
-    form.action = oldaction;
-  }, 1000);
+  return false;
 }
