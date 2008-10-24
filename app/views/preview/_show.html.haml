@@ -1,3 +1,5 @@
 = javascript_include_tag 'page_preview'
-%p.buttons{:style => 'float: left; padding-right: 5px;' }
+%p.buttons
   %input{:type=>'submit', :id => 'show-preview', :value => 'Preview', :class => 'button', :onclick => 'return preview(this)'}
+%div#preview-notice{:style => 'display:none; background-color:#fe0;border:3px solid #ff5; color:black;margin:5px 20px -10px 20px; padding: 0.75em;'}
+  This is a preview, your changes have not yet been saved!
