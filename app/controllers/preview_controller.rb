@@ -5,6 +5,7 @@ class PreviewController < ApplicationController
   def show
     Page.transaction do # Extra safe don't save anything voodoo
       PagePart.transaction do
+        def request.request_method; :get; end
         construct_page.process(request,response)
         @performed_render = true
         raise "Don't you dare save any changes" 

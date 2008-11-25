@@ -6,6 +6,7 @@ end
 describe PreviewController do
   scenario :users, :home_page
   before(:each) do
+    controller.stub! :verify_authenticity_token
     login_as :admin
   end
 
@@ -13,6 +14,11 @@ describe PreviewController do
     it 'should construct the page and process it' do
       controller.should_receive(:construct_page).and_return(mock('page', :process => true))
       post :show
+    end
+    
+    it 'should modify the request such that it is a get' do
+      post :show
+      request.method.should == :get
     end
 
     it 'should test that it does not modify page'
