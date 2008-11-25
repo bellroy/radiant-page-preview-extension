@@ -16,7 +16,10 @@ describe PreviewController do
       post :show
     end
     
-    it 'should modify the request such that it is a get' do
+    # It doesn't make sense to preview a :post, as we can't specify the parameters
+    # We're using :post to overcome the :get 65Kb limitation, but still want to
+    # Page.process method to think it is a :get action (for logic like request.post?)
+    it 'should override the request such that it is a get' do
       post :show
       request.method.should == :get
     end
