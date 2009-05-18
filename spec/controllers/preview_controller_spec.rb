@@ -4,7 +4,7 @@ class TestPage < Page
 end
 
 describe PreviewController do
-  scenario :users, :home_page
+  dataset :users, :home_page
   before(:each) do
     controller.stub! :verify_authenticity_token
     login_as :admin
@@ -31,28 +31,26 @@ describe PreviewController do
   describe 'construct page' do
     before(:all) do
       PreviewController.class_eval { public :construct_page }
+      Page.find_by_slug("/").parts.clear
     end
     before(:each) do
-      controller.stub!(:params).
-        and_return({:page => {:class_name => 'page'}.with_indifferent_access}.with_indifferent_access)
-      @page = Page.new(:id => 1)
+      part_parameters = HashWithIndifferentAccess.new('1' => {:name=> 'new part'})
+      page_parameters = HashWithIndifferentAccess.new(:class_name => 'Page', :parts_attributes => part_parameters)
+      query_parameters = HashWithIndifferentAccess.new(:page => page_parameters)
+
+      controller.stub!(:params).and_return(query_parameters)
       controller.stub!(:request).and_return(request)
     end
     describe 'any page', :shared => true do
-      it 'should retrieve parts from params' do
-        controller.params[:part] = []
-        controller.construct_page
-        controller.construct_page.parts.should be_empty
-      end
       it 'should contain parts created' do
-        controller.params[:part] = {'0' => {:name=> 'new part'}}
+        page = controller.construct_page
 
-        controller.construct_page.parts.should_not be_empty
-        controller.construct_page.parts.first.name.should == 'new part'
+        page.parts.should_not be_empty
+        page.parts.first.name.should == 'new part'
       end
-      it 'should not contain remove deleted parts' do
-        @page.parts.build :name => 'delete me'
-
+      it 'should not retain parts marked for deletion' do
+        controller.params[:page][:parts_attributes] = {'1' => {:name=> 'new part', :_delete => true}}
+      
         controller.construct_page.parts.should be_empty 
       end
     end
@@ -60,7 +58,7 @@ describe PreviewController do
     describe 'new child' do
       before do
         Page.stub!(:find).and_return @page
-        request.stub!(:referer).and_return('/admin/pages/1/child/new')
+        request.stub!(:referer).and_return('/admin/pages/1/children/new')
       end
       it_should_behave_like "any page"
       it 'should not save any changes' do
@@ -81,7 +79,7 @@ describe PreviewController do
         controller.construct_page.class.should == TestPage
       end
       it 'should set get the parent from the referer' do
-        request.stub!(:referer).and_return('/admin/pages/100/child/new')
+        request.stub!(:referer).and_return('/admin/pages/100/children/new')
         Page.should_receive(:find).with('100')
         controller.construct_page
       end
@@ -93,7 +91,7 @@ describe PreviewController do
     end
     describe 'edit existing page' do
       before do
-        request.stub!(:referer).and_return('/admin/pages/edit/1')
+        request.stub!(:referer).and_return('/admin/pages/1/edit')
         controller.params[:page][:class_name] = "Page"
         @page = Page.find(:first)
         Page.stub!(:find).and_return @page

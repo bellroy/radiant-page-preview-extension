@@ -26,17 +26,13 @@ class PreviewController < ApplicationController
   end
   
   def construct_page
-    if request.referer =~ %r{/admin/pages/edit/(\d+)}
+    if request.referer =~ %r{/admin/pages/(\d+)/edit}
       page = Page.find($1).becomes(page_class)
-      page.parts = []
-      page.attributes = params[:page]
+      page.update_attributes(params[:page])
     else
       page = page_class.new(params[:page])
       page.published_at = page.updated_at = page.created_at = Time.now
-      page.parent = Page.find($1) if request.referer =~ %r{/admin/pages/(\d+)/child/new}
-    end
-    params.fetch(:part, []).each do |i, attrs|
-      page.parts.build(attrs)
+      page.parent = Page.find($1) if request.referer =~ %r{/admin/pages/(\d+)/children/new}
     end
     return page
   end
