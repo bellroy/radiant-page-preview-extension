@@ -1,20 +1,20 @@
-function preview(button) {
-  form = button.form;
-  oldtarget = form.target;
-  oldaction = form.action;
-
-  $('page-preview').show();
-  $('preview-notice').show();
-
-  location.hash = 'show-preview';
-
-  form.target = 'page-preview';
-  form.action = '/admin/preview';
-  
-  form.submit();
-
-  form.target = oldtarget;
-  form.action = oldaction;
-
-  return false;
-}
+document.observe('dom:loaded', function() {
+  $('show-preview').observe('click', function(e) {
+    e.preventDefault()
+    
+    var form = this.form,
+      oldTarget = form.target,
+      oldAction = form.action
+    
+    try {
+      var iframe = $('page-preview').show()
+      location.hash = this.id
+      form.target = iframe.id
+      form.action = '/admin/preview'
+      form.submit()
+    } finally {
+      form.target = oldTarget
+      form.action = oldAction
+    }
+  })
+})
